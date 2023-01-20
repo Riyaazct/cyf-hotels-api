@@ -14,9 +14,25 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
-app.get("/hotels", (req, res) => {
+// GET HOTELS
+
+app.get("/hotels/", (req, res) => {
   pool
     .query("SELECT * FROM hotels")
+    .then((result) => res.json(result.rows))
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json(error);
+    });
+});
+
+// GET HOTEL BY ID
+
+app.get("/hotels/:hotelId", (req, res) => {
+  const hotelId = req.params.hotelId;
+
+  pool
+    .query("SELECT * FROM hotels WHERE id=$1", [hotelId])
     .then((result) => res.json(result.rows))
     .catch((error) => {
       console.error(error);
@@ -59,7 +75,7 @@ app.post("/hotels", (req, res) => {
           ])
           .then(() => res.send("Hotel created"))
           .catch((error) => {
-            console.log(error);
+            console.error(error);
             res.status(500).json(error);
           });
       }
@@ -98,7 +114,7 @@ app.post("/customers", (req, res) => {
           ])
           .then(() => res.send("Customer created"))
           .catch((error) => {
-            console.log(error);
+            console.error(error);
             res.status(500).json(error);
           });
       }
