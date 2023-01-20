@@ -122,7 +122,7 @@ app.post("/customers", (req, res) => {
     });
 });
 
-// GET ALL CUSTOMERS
+// GET ALL CUSTOMERS ORDERED BY NAME
 // EXERCISE 2
 app.get("/customers", (req, res) => {
   const query = "SELECT * FROM customers ORDER BY name";
@@ -143,6 +143,30 @@ app.get("/customers/:id", (req, res) => {
 
   pool
     .query("SELECT * from customers where id=$1", [customerId])
+    .then((result) => res.json(result.rows))
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json(error);
+    });
+});
+
+// GET BOOKINGS FOR CUSTOMER BY ID
+//EXERCISE 2
+
+app.get("/customers/:customerId/bookings", (req, res) => {
+  const customerId = req.params.customerId;
+
+  pool
+    .query(
+      `select b.checkin_date, b.nights as "number of nights", h.name as "hotel name", h.postcode 
+       from customers c
+       inner join bookings b 
+       on b.customer_id = c.id
+       inner join hotels h
+       on h.id = b.hotel_id
+       where c.id = $1`,
+      [customerId]
+    )
     .then((result) => res.json(result.rows))
     .catch((error) => {
       console.error(error);
