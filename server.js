@@ -174,6 +174,26 @@ app.get("/customers/:customerId/bookings", (req, res) => {
     });
 });
 
+app.put("/customers/:customerId", (req, res) => {
+  const customerId = req.params.customerId;
+  const newEmail = req.body.email;
+
+  if (!newEmail) {
+    res.status(400).send("Email cannot be blank");
+  }
+
+  pool
+    .query("update customers c set email = $1 where id = $2", [
+      newEmail,
+      customerId,
+    ])
+    .then(() => res.send(`customer ${customerId} updated`))
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json(error);
+    });
+});
+
 // PORT
 
 app.listen(port, function () {
