@@ -27,6 +27,7 @@ app.get("/hotels/", (req, res) => {
 });
 
 // GET HOTEL BY ID
+// EXERCISE 2
 
 app.get("/hotels/:hotelId", (req, res) => {
   const hotelId = req.params.hotelId;
@@ -124,12 +125,27 @@ app.post("/customers", (req, res) => {
 // GET ALL CUSTOMERS
 // EXERCISE 2
 app.get("/customers", (req, res) => {
-  const query = "SELECT * FROM customers";
+  const query = "SELECT * FROM customers ORDER BY name";
   pool
     .query(query)
     .then((result) => res.json(result.rows))
     .catch((error) => {
       console.log(error);
+      res.status(500).json(error);
+    });
+});
+
+// GET CUSTOMER BY ID
+// EXERCISE 2
+
+app.get("/customers/:id", (req, res) => {
+  const customerId = req.params.id;
+
+  pool
+    .query("SELECT * from customers where id=$1", [customerId])
+    .then((result) => res.json(result.rows))
+    .catch((error) => {
+      console.error(error);
       res.status(500).json(error);
     });
 });
