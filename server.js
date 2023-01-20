@@ -25,6 +25,8 @@ app.get("/hotels", (req, res) => {
 });
 
 // CREATE NEW HOTEL (ref week 3 SQL syllabus)
+// EXERCISE 1
+
 app.post("/hotels", (req, res) => {
   // store queries in respective variables
   const newHotelName = req.body.name;
@@ -64,20 +66,8 @@ app.post("/hotels", (req, res) => {
     });
 }); // end of create new hotel
 
-// GET ALL CUSTOMERS
-
-app.get("/customers", (req, res) => {
-  const query = "SELECT * FROM customers";
-  pool
-    .query(query)
-    .then((result) => res.json(result.rows))
-    .catch((error) => {
-      console.log(error);
-      res.status(500).json(error);
-    });
-});
-
 // CREATE NEW CUSTOMER
+// EXERCISE 1
 
 app.post("/customers", (req, res) => {
   const newCustomerName = req.body.name;
@@ -114,6 +104,21 @@ app.post("/customers", (req, res) => {
       }
     });
 });
+
+// GET ALL CUSTOMERS
+// EXERCISE 2
+app.get("/customers", (req, res) => {
+  const query = "SELECT * FROM customers";
+  pool
+    .query(query)
+    .then((result) => res.json(result.rows))
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(error);
+    });
+});
+
+// PORT
 
 app.listen(port, function () {
   console.log(
